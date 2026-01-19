@@ -1,0 +1,6 @@
+name: CobaltLibrary
+version: '1.0'
+main: dev.cobalt.library.CobaltLibrary
+api-version: '1.21'
+authors: [ Bimulu ]
+description: Cobalt Modules Core
