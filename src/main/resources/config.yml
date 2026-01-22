@@ -1,0 +1,188 @@
+# ========================================================================
+# DATABASE CONFIGURATION FOR COBALTLIBRARY
+# ========================================================================
+
+database:
+  # ======================================================================
+  # DATABASE TYPE
+  # ======================================================================
+  # Options: mysql, postgresql, sqlite, h2
+  type: mysql
+
+  # ======================================================================
+  # MYSQL / POSTGRESQL SETTINGS
+  # ======================================================================
+  # Only used when type is 'mysql' or 'postgresql'
+
+  host: localhost
+  port: 3306                    # MySQL default: 3306, PostgreSQL default: 5432
+  database: minecraft_network   # Database name
+  username: root
+  password: your_password_here
+
+  # Additional URL parameters (optional)
+  # These are appended to the JDBC URL
+  # Example for MySQL:
+  params: "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+
+  # Example for PostgreSQL:
+  # params: "?ssl=false&connectTimeout=10"
+
+  # ======================================================================
+  # SQLITE / H2 SETTINGS
+  # ======================================================================
+  # Only used when type is 'sqlite' or 'h2'
+  # The database file will be created in the plugin's data folder
+
+  file: database.db             # Filename (e.g., database.db for SQLite)
+
+  # ======================================================================
+  # CONNECTION POOL SETTINGS (HikariCP)
+  # ======================================================================
+  # These settings control the connection pool behavior
+  # Adjust based on your server load and database capabilities
+
+  pool-size: 10                 # Maximum number of connections in the pool
+    # Recommended: 10-20 for most servers
+  # Higher = more concurrent queries, more DB load
+
+  min-idle: 2                   # Minimum number of idle connections to maintain
+    # Recommended: 2-5
+  # Keeps connections warm for faster queries
+
+  timeout: 30000                # Connection timeout in milliseconds
+    # How long to wait for a connection from the pool
+  # Default: 30000 (30 seconds)
+
+  idle-timeout: 600000          # How long a connection can be idle before being removed
+    # Default: 600000 (10 minutes)
+  # Helps clean up unused connections
+
+  max-lifetime: 1800000         # Maximum lifetime of a connection in milliseconds
+    # Default: 1800000 (30 minutes)
+  # Forces connection refresh to prevent stale connections
+
+  leak-detection: 60000         # Connection leak detection threshold in milliseconds
+    # Default: 60000 (1 minute)
+    # Logs warning if connection is not returned to pool
+  # Set to 0 to disable
+
+  # ======================================================================
+  # QUERY STATISTICS
+  # ======================================================================
+  # Track query performance for optimization
+
+  enable-stats: true            # Enable query statistics tracking
+    # Tracks: execution count, avg time, success rate
+    # Useful for identifying slow queries
+  # Minimal performance impact
+
+# ========================================================================
+# CONFIGURATION EXAMPLES FOR DIFFERENT DATABASES
+# ========================================================================
+
+# ----------------------------------------------------------------------
+# EXAMPLE 1: MySQL (Recommended for production)
+# ----------------------------------------------------------------------
+# database:
+#   type: mysql
+#   host: localhost
+#   port: 3306
+#   database: minecraft_network
+#   username: minecraft_user
+#   password: secure_password_123
+#   params: "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+#   pool-size: 10
+#   min-idle: 2
+#   timeout: 30000
+#   idle-timeout: 600000
+#   max-lifetime: 1800000
+#   leak-detection: 60000
+#   enable-stats: true
+
+# ----------------------------------------------------------------------
+# EXAMPLE 2: PostgreSQL
+# ----------------------------------------------------------------------
+# database:
+#   type: postgresql
+#   host: localhost
+#   port: 5432
+#   database: minecraft_network
+#   username: postgres
+#   password: postgres_password
+#   params: "?ssl=false"
+#   pool-size: 10
+#   min-idle: 2
+#   timeout: 30000
+#   idle-timeout: 600000
+#   max-lifetime: 1800000
+#   leak-detection: 60000
+#   enable-stats: true
+
+# ----------------------------------------------------------------------
+# EXAMPLE 3: SQLite (Simple, file-based, good for small servers)
+# ----------------------------------------------------------------------
+# database:
+#   type: sqlite
+#   file: database.db
+#   pool-size: 1              # SQLite only supports 1 connection
+#   timeout: 30000
+#   enable-stats: true
+
+# ----------------------------------------------------------------------
+# EXAMPLE 4: H2 (In-memory or file-based, good for testing)
+# ----------------------------------------------------------------------
+# database:
+#   type: h2
+#   file: database           # Will create database.mv.db
+#   pool-size: 10
+#   min-idle: 2
+#   timeout: 30000
+#   enable-stats: true
+
+# ----------------------------------------------------------------------
+# EXAMPLE 5: Remote MySQL with SSL (Production/Secure)
+# ----------------------------------------------------------------------
+# database:
+#   type: mysql
+#   host: db.example.com
+#   port: 3306
+#   database: minecraft_prod
+#   username: minecraft_app
+#   password: very_secure_password_456
+#   params: "?useSSL=true&requireSSL=true&verifyServerCertificate=true&serverTimezone=UTC"
+#   pool-size: 20            # Higher for production
+#   min-idle: 5
+#   timeout: 30000
+#   idle-timeout: 600000
+#   max-lifetime: 1800000
+#   leak-detection: 60000
+#   enable-stats: true
+
+# ========================================================================
+# PERFORMANCE TUNING TIPS
+# ========================================================================
+#
+# Small Server (1-50 players):
+#   pool-size: 5-10
+#   min-idle: 2
+#
+# Medium Server (50-200 players):
+#   pool-size: 10-15
+#   min-idle: 3-5
+#
+# Large Server (200-500 players):
+#   pool-size: 15-25
+#   min-idle: 5-10
+#
+# Network/BungeeCord (Multiple servers):
+#   pool-size: 20-40
+#   min-idle: 10-15
+#
+# Notes:
+# - Don't set pool-size too high (wastes DB resources)
+# - Keep min-idle at 20-50% of pool-size
+# - Monitor with enable-stats: true
+# - Adjust based on actual query load
+#
+# ========================================================================

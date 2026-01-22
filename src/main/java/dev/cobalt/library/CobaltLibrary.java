@@ -46,7 +46,6 @@ public final class CobaltLibrary extends JavaPlugin {
     private PlayerDataRegistry playerDataRegistry;
     private CommandRegistry commandRegistry;
     private GuiRegistry guiRegistry;
-    private AdvancedScheduler scheduler;
     private MetricsCollector metricsCollector;
     private LocalizationManager localizationManager;
     private EconomyManager economyManager;
@@ -77,8 +76,7 @@ public final class CobaltLibrary extends JavaPlugin {
 
         try {
             // Initialize in dependency order
-            initializeCore().thenCompose(v -> initializeDataLayer())
-                    .thenCompose(v -> initializeMessaging())
+            initializeCore().thenCompose(v -> initializeMessaging())
                     .thenCompose(v -> initializeFrameworks())
                     .thenCompose(v -> initializeIntegrations())
                     .thenRun(() -> onStartupComplete(startTime))
@@ -95,68 +93,56 @@ public final class CobaltLibrary extends JavaPlugin {
     }
 
     private CompletableFuture<Void> initializeCore() {
-        return CompletableFuture.runAsync(() -> {
-            logger.info("→ Initializing core services...");
-
-            saveDefaultConfig();
-            configurationManager = new ConfigurationManager(this);
-            securityManager = new dev.cobalt.library.security.SecurityManager(this);
-            eventBus = new EventBus(this);
-            pluginRegistry = new PluginRegistry(this, eventBus);
-            scheduler = new AdvancedScheduler(this);
-            metricsCollector = new MetricsCollector(this);
-
-            logger.success("✓ Core services initialized");
-        }, scheduler.getAsyncExecutor());
-    }
-
-    private CompletableFuture<Void> initializeDataLayer() {
-        return CompletableFuture.runAsync(() -> {
-            logger.info("→ Initializing data layer...");
-
-            databaseManager = new DatabaseManager(this, configurationManager);
-            cacheManager = new CacheManager(this, configurationManager);
-            playerDataRegistry = new PlayerDataRegistry(this, databaseManager, cacheManager);
-
-            // Connect to database
-            databaseManager.connect().join();
-
-            logger.success("✓ Data layer initialized");
-        }, scheduler.getAsyncExecutor());
+        //return CompletableFuture.runAsync(() -> {
+        //            logger.info("→ Initializing core services...");
+        //
+        //            saveDefaultConfig();
+        //            configurationManager = new ConfigurationManager(this);
+        //            securityManager = new dev.cobalt.library.security.SecurityManager(this);
+        //            eventBus = new EventBus(this);
+        //            pluginRegistry = new PluginRegistry(this, eventBus);
+        //            metricsCollector = new MetricsCollector(this);
+        //
+        //            logger.success("✓ Core services initialized");
+        //        }, scheduler.getAsyncExecutor());
+        return null;
     }
 
     private CompletableFuture<Void> initializeMessaging() {
-        return CompletableFuture.runAsync(() -> {
-            logger.info("→ Initializing messaging systems...");
-
-            messageBroker = new MessageBroker(this, configurationManager);
-            messageBroker.connect().join();
-
-            logger.success("✓ Messaging systems initialized");
-        }, scheduler.getAsyncExecutor());
+        //return CompletableFuture.runAsync(() -> {
+        //            logger.info("→ Initializing messaging systems...");
+        //
+        //            messageBroker = new MessageBroker(this, configurationManager);
+        //            messageBroker.connect().join();
+        //
+        //            logger.success("✓ Messaging systems initialized");
+        //        }, scheduler.getAsyncExecutor());
+        return null;
     }
 
     private CompletableFuture<Void> initializeFrameworks() {
-        return CompletableFuture.runAsync(() -> {
-            logger.info("→ Initializing frameworks...");
-
-            localizationManager = new LocalizationManager(this, configurationManager);
-            commandRegistry = new CommandRegistry(this, eventBus);
-            guiRegistry = new GuiRegistry(this, eventBus);
-
-            logger.success("✓ Frameworks initialized");
-        }, scheduler.getAsyncExecutor());
+        //return CompletableFuture.runAsync(() -> {
+        //            logger.info("→ Initializing frameworks...");
+        //
+        //            localizationManager = new LocalizationManager(this, configurationManager);
+        //            commandRegistry = new CommandRegistry(this, eventBus);
+        //            guiRegistry = new GuiRegistry(this, eventBus);
+        //
+        //            logger.success("✓ Frameworks initialized");
+        //        }, scheduler.getAsyncExecutor());
+        return null;
     }
 
     private CompletableFuture<Void> initializeIntegrations() {
-        return CompletableFuture.runAsync(() -> {
-            logger.info("→ Initializing integrations...");
-
-            economyManager = new EconomyManager(this, eventBus);
-            economyManager.hookIntoEconomy();
-
-            logger.success("✓ Integrations initialized");
-        }, scheduler.getAsyncExecutor());
+        // return CompletableFuture.runAsync(() -> {
+        //            logger.info("→ Initializing integrations...");
+        //
+        //            economyManager = new EconomyManager(this, eventBus);
+        //            economyManager.hookIntoEconomy();
+        //
+        //            logger.success("✓ Integrations initialized");
+        //        }, scheduler.getAsyncExecutor());
+        return null;
     }
 
     private void onStartupComplete(long startTime) {
@@ -215,7 +201,6 @@ public final class CobaltLibrary extends JavaPlugin {
                 }),
                 CompletableFuture.runAsync(() -> {
                     if (metricsCollector != null) metricsCollector.stopCollection();
-                    if (scheduler != null) scheduler.shutdown();
                 })
         ).thenRun(() -> {
             if (eventBus != null) {
@@ -311,9 +296,9 @@ public final class CobaltLibrary extends JavaPlugin {
         return getInstance().guiRegistry;
     }
 
-    public static AdvancedScheduler getScheduler() {
-        return getInstance().scheduler;
-    }
+    //public static AdvancedScheduler getScheduler() {
+    //    return getInstance().scheduler;
+    //}
 
     public static MetricsCollector getMetricsCollector() {
         return getInstance().metricsCollector;
